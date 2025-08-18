@@ -1,8 +1,17 @@
 <script setup>
-import { ref } from 'vue';
 import ProductList from './components/ProductList.vue';
+import MainSearchForm from './components/MainSearchForm.vue';
+import HeaderSearchForm from './components/HeaderSearchForm.vue';
+import NewProduct from './components/NewProduct.vue';
+import NewOrder from './components/NewOrder.vue';
+import axios from "axios";
+import { ref, onMounted, computed } from "vue";
 
-const products = ref([
+const api = axios.create({ baseURL: 'https://fakestoreapi.com' });
+const products = ref([]);
+const filteredProducts = ref([]);
+
+const dataFromApi = [
   {
     id: 1,
     title: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
@@ -57,7 +66,8 @@ const products = ref([
   },
   {
     id: 5,
-    title: "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet",
+    title:
+      "John Hardy Women's Legends Naga Gold & Silver Dragon Station Chain Bracelet",
     price: 695,
     description:
       "From our Legends Collection, the Naga was inspired by the mythical water dragon that protects the ocean's pearl. Wear facing inward to be bestowed with love and abundance, or outward for protection.",
@@ -135,7 +145,8 @@ const products = ref([
   },
   {
     id: 11,
-    title: "Silicon Power 256GB SSD 3D NAND A55 SLC Cache Performance Boost SATA III 2.5",
+    title:
+      "Silicon Power 256GB SSD 3D NAND A55 SLC Cache Performance Boost SATA III 2.5",
     price: 109,
     description:
       "3D NAND flash are applied to deliver high transfer speeds Remarkable transfer speeds that enable faster bootup and improved overall system performance. The advanced SLC Cache Technology allows performance boost and longer lifespan 7mm slim design suitable for Ultrabooks and Ultra-slim notebooks. Supports TRIM command, Garbage Collection technology, RAID, and ECC (Error Checking & Correction) to provide the optimized performance and enhanced reliability.",
@@ -264,12 +275,85 @@ const products = ref([
       count: 145,
     },
   },
-]);
+];
+
+onMounted(async function () {
+  products.value = await fetchProducts();
+  /*products.value = dataFromApi;*/
+  filteredProducts.value = products.value;
+});
+
+const productData = computed(function() {
+  return products.value.map(function(item) {
+    return { id: item.id, title: item.title };
+  });
+});
+
+async function fetchProducts() {
+  try {
+    const response = await api.get('/products');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
+  }
+}
+
+function searchProducts(data) {
+  const title = data.title ?? '';
+  const minPrice = data.min_price ?? 0;
+  const maxPrice = data.max_price ?? 0;
+  let newProducts = products.value;
+
+  if (title) {
+    newProducts = newProducts.filter(function(item) {
+      return item.title.toLowerCase().includes(title.toLowerCase());
+    });
+  }
+  if (minPrice) {
+    newProducts = newProducts.filter(function(item) {
+      return item.price >= minPrice;
+    });
+  }
+  if (maxPrice) {
+    newProducts = newProducts.filter(function(item) {
+      return item.price <= maxPrice;
+    });
+  }
+  filteredProducts.value = newProducts;
+}
+
+function saveProduct(data) {
+  const product = {
+    id: products.value.length,
+    title: data.title,
+    price: data.price,
+    description: data.description,
+    category: data.category,
+    image: data.image,
+    rating: {
+      rate: data.rate,
+      count: data.count,
+    },
+  };
+  products.value.push(product);
+}
 </script>
 
 <template>
-  <ProductList :products="products" />
+  <header class="flex justify-end p-2">
+    <HeaderSearchForm @find="searchProducts" />
+  </header>
+
+  <main class="grid grid-cols-1 2xl:grid-cols-4 gap-4">
+    <aside class="col-span-1 p-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-1 2xl:auto-rows-min gap-4">
+      <MainSearchForm @find="searchProducts" />
+      <NewProduct @save="saveProduct" />
+      <NewOrder :product_data="productData" />
+    </aside>
+
+    <ProductList class="col-span-1 2xl:col-span-3" :products="filteredProducts" />
+  </main>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
