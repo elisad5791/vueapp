@@ -1,17 +1,26 @@
 <script setup>
 import Navigation from './components/Navigation.vue';
 import { onMounted } from 'vue';
-import { username, products } from './store.js';
-import { useFakestoreapi } from './hooks/useFakestoreapi.js';
-
+import { useUserStore } from './stores/user.js';
+import { useProductsStore } from './stores/products.js';
+import { useBasketStore } from './stores/basket.js';
+import { storeToRefs } from 'pinia';
 
 onMounted(async function() {
-  const name = window.localStorage.getItem('username');
-  if (name) {
-    username.value = name;
-  }
+  const userStore = useUserStore()
+  const { loadUser } = userStore;
+  const { user } = storeToRefs(userStore);
+  loadUser();
 
-  products.value = await useFakestoreapi();
+  const productsStore = useProductsStore();
+  const { products } = storeToRefs(productsStore);
+  const { loadProducts } = productsStore;
+  await loadProducts();
+
+  if (user.value.auth) {
+    const { loadBasket } = useBasketStore();
+    loadBasket();
+  }
 });
 </script>
 

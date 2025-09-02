@@ -1,11 +1,12 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { products } from '../store.js';
-import Product from '../components/ProductComponent.vue';
+import Product from '../components/Product.vue';
+import { useProductsStore } from '../stores/products.js';
 
 const route = useRoute();
 const productId = route.params.id;
+const { findProduct } = useProductsStore();
 
 const product = ref({
   title: '',
@@ -18,9 +19,10 @@ const product = ref({
   }
 });
 
-onMounted(async function () {
-  product.value = products.value.filter(item => item.id == productId)[0];
-});
+const productData = findProduct(productId);
+if (productData) {
+  product.value = productData;
+}
 </script>
 
 <template>

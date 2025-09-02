@@ -1,21 +1,16 @@
 <script setup>
 import HeaderSearchForm from '../components/HeaderSearchForm.vue';
 import ProductList from '../components/ProductList.vue';
-import { ref, onMounted, watch } from 'vue';
-import { products } from '../store.js';
+import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useProductsStore } from '../stores/products.js';
 
 const filteredProducts = ref([]);
-
-onMounted(async function () {
-  filteredProducts.value = products.value;
-});
-
-watch(() => products.value, function(newValue) {
-  filteredProducts.value = newValue;
-});
+const { products } = storeToRefs(useProductsStore());
+filteredProducts.value = products.value;
 
 function searchProducts(data) {
-  const title = data.title ?? "";
+  const title = data.title ?? '';
   const minPrice = data.min_price ?? 0;
   const maxPrice = data.max_price ?? 0;
   let newProducts = products.value;

@@ -1,0 +1,58 @@
+import { defineStore } from "pinia";
+import { ref } from 'vue';
+import axios from 'axios';
+import { dataFromApi } from '../data.js';
+import { useRouter } from 'vue-router';
+
+export const useProductsStore = defineStore('products', function () {
+  const products = ref([]);
+  const router = useRouter();
+
+  async function loadProducts() {
+    const api = axios.create({ baseURL: 'https://fakestoreapi.com' });
+
+    let fetchedProducts;
+    /*try {
+        const response = await api.get('/products');
+        fetchedProducts =  response.data;
+    } catch (error) {*/
+    fetchedProducts = [];
+    /*}*/
+
+    if (fetchedProducts.length == 0) {
+      fetchedProducts = dataFromApi;
+    }
+
+    products.value = fetchedProducts;
+  }
+
+  function findProduct(productId) {
+    const data = products.value.filter(item => item.id == productId);
+    const product = data.length > 0 ? data[0] : null;
+    return product;
+  }
+
+  function findProductsByIds(ids) {
+    const data = products.value.filter((item) => ids.includes(item.id));
+    return data;
+  }
+
+  function addProduct(data) {
+    const product = {
+      id: products.value.length,
+      title: data.title,
+      price: data.price,
+      description: data.description,
+      category: data.category,
+      image: data.image,
+      rating: {
+        rate: data.rate,
+        count: data.count,
+      },
+    };
+    products.value.push(product);
+    router.push('/');
+  }
+
+  return { products, loadProducts, findProduct, findProductsByIds, addProduct };
+});

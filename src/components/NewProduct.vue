@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import { useProductsStore } from '../stores/products.js';
 
 const title = ref('');
 const description = ref('');
@@ -8,7 +9,8 @@ const image = ref('');
 const price = ref(null);
 const rate = ref(null);
 const count = ref(null);
-const emits = defineEmits(['save']);
+
+const { addProduct } = useProductsStore();
 
 function saveProduct() {
   const data = {  
@@ -29,7 +31,7 @@ function saveProduct() {
   rate.value = null;
   count.value = null;
   
-  emits('save', data);
+  addProduct(data);
 }
 </script>
 

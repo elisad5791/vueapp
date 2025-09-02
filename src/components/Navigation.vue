@@ -1,20 +1,20 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { username } from '../store.js';
-import { useRouter } from 'vue-router';
+import { useUserStore } from '../stores/user.js';
+import { storeToRefs } from 'pinia';
 
-const showLogin = ref(username.value == '');
-const router = useRouter();
+const userStore = useUserStore();
+const { logout } = userStore;
+const { user } = storeToRefs(userStore);
 
-watch(() => username.value, function(newValue) {
-  showLogin.value = newValue == '';
-});
+const showLogin = ref(!user.value.auth);
 
-function logout() {
-  window.localStorage.removeItem('username');
-  username.value = '';
-  router.push('/');
-}
+watch(
+  () => user.value.auth, 
+  function(newValue) {
+    showLogin.value = !newValue;
+  }
+);
 </script>
 
 <template>
@@ -28,13 +28,21 @@ function logout() {
         <li><RouterLink to="/">Главная</RouterLink></li>
         <li><RouterLink to="/admin">Панель администрирования</RouterLink></li>
         <li><RouterLink to="/basket">Корзина</RouterLink></li>
+
         <li v-if="showLogin"><RouterLink to="/login">Войти</RouterLink></li>
         <li v-else>
-          <button type="button" @click="logout">Выйти</button>
+          <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="font-bold">{{ user.name }} ⬇️</div>
+            <ul tabindex="0" class="menu dropdown-content bg-base-200 rounded-box z-1 mt-4 w-26 p-2 shadow-sm">
+              <li><button type="button" @click="logout">Выйти</button></li>
+            </ul>
+          </div>
         </li>
       </ul>
     </div>
   </div>
+
+  <!---->
 </template>
 
 <style scoped></style>

@@ -1,26 +1,16 @@
 <script setup>
-import { username } from '../store.js';
+import { useUserStore } from '../stores/user.js';
 import { useRouter } from 'vue-router';
+import { useBasketStore } from '../stores/basket.js';
 
 const props = defineProps(['product']);
 const router = useRouter();
+const { addProductToBasket } = useBasketStore();
+const { checkout } = useUserStore();
 
 function addToBasket() {
-  if (username.value == '') {
-    router.push('/login');
-  }
-  
-  const basket = window.localStorage.getItem('basket');
-  const id = String(props.product.id);
-
-  if (!basket) {
-    window.localStorage.setItem('basket', id);
-    return;
-  }
-
-  const ids = basket.split(',').filter(item => item != id);
-  ids.push(id);
-  window.localStorage.setItem('basket', ids.join(','));
+  if (!checkout()) return;
+  addProductToBasket(props.product.id);
 }
 </script>
 

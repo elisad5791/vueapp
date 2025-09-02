@@ -1,15 +1,25 @@
 <script setup>
-const props = defineProps(['products']);
-const emits = defineEmits(['remove']);
+import { useBasketStore } from '../stores/basket.js';
+import { storeToRefs } from 'pinia';
+import { ref, watch } from 'vue';
 
-function removeProduct(id) {
-  emits('remove', id);
-}
+const basketStore = useBasketStore()
+const { removeProductFromBasket } = basketStore;
+const { basket } = storeToRefs(basketStore);
+
+const items = ref(basket.value);
+
+watch(
+  () => basket.value, 
+  newValue => {
+    items.value = newValue;
+  }
+);
 </script>
 
 <template>
   <div class="overflow-x-auto mt-8">
-    <table class="table max-w-[800px] mx-auto" v-if="products.length > 0">
+    <table class="table max-w-[800px] mx-auto" v-if="items.length > 0">
       <thead>
         <tr>
           <th></th>
@@ -19,12 +29,12 @@ function removeProduct(id) {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(product, key) in products" :key="product.id">
+        <tr v-for="(product, key) in items" :key="product.id">
           <th>{{ key + 1 }}</th>
           <td>{{ product.title }}</td>
           <td>{{ product.price }}</td>
           <td>
-            <button type="button" class="btn btn-sm btn-error" @click="removeProduct(product.id)">
+            <button type="button" class="btn btn-sm btn-error" @click="removeProductFromBasket(product.id)">
               Удалить
             </button>
           </td>
