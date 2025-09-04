@@ -17,7 +17,7 @@ onMounted(async function() {
   const { loadProducts } = productsStore;
   await loadProducts();
 
-  if (user.value.auth) {
+  if (user.value.isLoggedIn) {
     const { loadBasket } = useBasketStore();
     loadBasket();
   }

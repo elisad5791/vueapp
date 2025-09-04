@@ -1,10 +1,10 @@
 <script setup>
 import { useBasketStore } from '../stores/basket.js';
 import { storeToRefs } from 'pinia';
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 
 const basketStore = useBasketStore()
-const { removeProductFromBasket } = basketStore;
+const { removeProductFromBasket, increaseCount, decreaseCount } = basketStore;
 const { basket } = storeToRefs(basketStore);
 
 const items = ref(basket.value);
@@ -15,16 +15,22 @@ watch(
     items.value = newValue;
   }
 );
+
+const total = computed(function() {
+  return items.value.reduce((acc, item) => acc + item.price * item.count, 0).toFixed(2);
+});
 </script>
 
 <template>
   <div class="overflow-x-auto mt-8">
-    <table class="table max-w-[800px] mx-auto" v-if="items.length > 0">
+    <table class="table max-w-[1000px] mx-auto" v-if="items.length > 0">
       <thead>
         <tr>
           <th></th>
           <th>Название</th>
           <th>Цена</th>
+          <th>Количество</th>
+          <th>Сумма</th>
           <th></th>
         </tr>
       </thead>
@@ -33,15 +39,22 @@ watch(
           <th>{{ key + 1 }}</th>
           <td>{{ product.title }}</td>
           <td>{{ product.price }}</td>
-          <td>
+          <td>{{ product.count }}</td>
+          <td>{{ product.price * product.count }}</td>
+          <td class="flex gap-1">
+            <button type="button" class="btn btn-sm btn-info text-xl" @click="increaseCount(product.id)">+</button>
+            <button type="button" class="btn btn-sm btn-info text-xl" @click="decreaseCount(product.id)">-</button>
             <button type="button" class="btn btn-sm btn-error" @click="removeProductFromBasket(product.id)">
               Удалить
             </button>
           </td>
         </tr>
+        <tr>
+          <td colspan="6" class="font-bold">Полная сумма: {{ total }} руб.</td>
+        </tr>
       </tbody>
     </table>
-    <div v-else class="max-w-[800px] mx-auto">В корзине нет товаров</div>
+    <div v-else class="max-w-[1000px] mx-auto">В корзине нет товаров</div>
   </div>
 </template>
 

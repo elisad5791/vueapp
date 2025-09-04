@@ -7,10 +7,10 @@ const userStore = useUserStore();
 const { logout } = userStore;
 const { user } = storeToRefs(userStore);
 
-const showLogin = ref(!user.value.auth);
+const showLogin = ref(!user.value.isLoggedIn);
 
 watch(
-  () => user.value.auth, 
+  () => user.value.isLoggedIn, 
   function(newValue) {
     showLogin.value = !newValue;
   }

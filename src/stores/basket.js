@@ -13,44 +13,78 @@ export const useBasketStore = defineStore('basket', function () {
 
     basket.value = [];
     if (storage) {
-      const ids = storage.split(',').map((item) => parseInt(item));
-      basket.value = findProductsByIds(ids);
+      const data = JSON.parse(storage);
+      const ids = Object.keys(data).map(item => parseInt(item));
+      const basketProducts = findProductsByIds(ids);
+      basket.value = basketProducts.map(function(item) {
+        const newItem = item;
+        newItem['count'] = data[String(item.id)];
+        return newItem;
+      });
     }
   }
 
   function addProductToBasket(productId) {
-    const storage = window.localStorage.getItem('basket');
-    const id = String(productId);
+    const ind = basket.value.findIndex(function(val) {
+      return val.id == productId;
+    });
 
-    if (!storage) {
-      window.localStorage.setItem('basket', id);
-    } else {
-      const ids = storage.split(',').filter(item => item != id);
-      ids.push(id);
-      window.localStorage.setItem('basket', ids.join(','));
-    }
-
-    const data = basket.value.filter(item => item.id == productId);
-    if (data.length == 0) {
+    if (ind == -1) {
       const product = findProduct(productId);
+      product['count'] = 1;
       basket.value.push(product);
+    } else {
+      basket.value[ind]['count'] += 1;
     }
+
+    updateLocalStorage();
 
     router.push('/basket');
   }
 
   function removeProductFromBasket(productId) {
-    const storage = window.localStorage.getItem('basket');
-    const id = String(productId);
-    const newIds = storage.split(',').filter((item) => item != id).join(',');
-    if (newIds) {
-      window.localStorage.setItem('basket', newIds);
+    basket.value = basket.value.filter(item => item.id != productId);
+    updateLocalStorage();
+  }
+
+  function increaseCount(productId) {
+    const ind = basket.value.findIndex(function(val) {
+      return val.id == productId;
+    });
+
+    const count = basket.value[ind]['count'] + 1;
+    basket.value[ind]['count'] = count;
+
+    updateLocalStorage();
+  }
+
+  function decreaseCount(productId) {
+    const ind = basket.value.findIndex(function(val) {
+      return val.id == productId;
+    });
+
+    const initialCount = basket.value[ind]['count'];
+    if (initialCount > 1) {
+      basket.value[ind]['count'] -= 1;
+    } else {
+      removeProductFromBasket(productId);
+    }
+
+    updateLocalStorage();
+  }
+
+  function updateLocalStorage() {
+    const data = basket.value.reduce(function(acc, item) {
+      acc[String(item.id)] = item.count;
+      return acc;
+    }, {});
+
+    if (Object.keys(data).length > 0) {
+      window.localStorage.setItem('basket', JSON.stringify(data));
     } else {
       window.localStorage.removeItem('basket');
     }
-
-    basket.value = basket.value.filter(item => item.id != productId);
   }
 
-  return { basket, loadBasket, addProductToBasket, removeProductFromBasket };
+  return { basket, loadBasket, addProductToBasket, removeProductFromBasket, increaseCount, decreaseCount };
 });
