@@ -1,34 +1,42 @@
 import { mount } from '@vue/test-utils';
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import Basket from '../../Basket.vue';
-import { createPinia, setActivePinia, storeToRefs } from 'pinia';
-import router from '../../../router/index.js';
-import { useBasketStore } from '../../../stores/basket.js';
+import { ref } from 'vue';
+
+const mockUseBasketStore = vi.hoisted(() => vi.fn());
+vi.mock('../../../stores/basket.js', () => ({
+  useBasketStore: mockUseBasketStore
+}))
 
 test('displays empty basket text', () => {
-  const pinia = createPinia();
-  const wrapper = mount(Basket, { global: { 
-    provide: { pinia: pinia }, 
-    plugins: [pinia, router] 
-  } });
+  mockUseBasketStore.mockReturnValue({
+    basket: ref([]),
+    loadBasket: vi.fn(),
+    addProductToBasket: vi.fn(),
+    removeProductFromBasket: vi.fn(),
+    increaseCount: vi.fn(),
+    decreaseCount: vi.fn(),
+  });
+
+  const wrapper = mount(Basket);
 
   expect(wrapper.text()).toContain('В корзине нет товаров');
 });
 
 test('displays basket data', () => {
-  const pinia = createPinia();
-  setActivePinia(pinia);
+  mockUseBasketStore.mockReturnValue({
+    basket: ref([
+      { id: 1, title: 'my title', price: 100, count: 2 },
+      { id: 2, title: 'my title 2', price: 150, count: 3 },
+    ]),
+    loadBasket: vi.fn(),
+    addProductToBasket: vi.fn(),
+    removeProductFromBasket: vi.fn(),
+    increaseCount: vi.fn(),
+    decreaseCount: vi.fn(),
+  });
 
-  const { basket } = storeToRefs(useBasketStore());
-  basket.value = [
-    { id: 1, title: 'my title', price: 100, count: 2 },
-    { id: 2, title: 'my title 2', price: 150, count: 3 },
-  ];
-
-  const wrapper = mount(Basket, { global: { 
-    provide: { pinia: pinia },
-    plugins: [pinia, router] 
-  } });
+  const wrapper = mount(Basket);
 
   expect(wrapper.text()).toContain('my title');
   expect(wrapper.text()).toContain('my title 2');
