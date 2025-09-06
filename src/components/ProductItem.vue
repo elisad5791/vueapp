@@ -15,7 +15,7 @@ function addToBasket() {
 </script>
 
 <template>
-  <div class="card bg-base-100 w-96 shadow-sm mx-auto">
+  <div class="card bg-base-100 w-96 shadow-sm mx-auto" :data-cy-product="product.id">
     <figure>
       <RouterLink :to="'/product/'+product.id">
         <img class="w-full h-96 object-contain" :src="product.image" :alt="product.title" />
@@ -37,7 +37,7 @@ function addToBasket() {
       </div>
 
       <div class="flex justify-center mt-4">
-        <button type="button" class="btn btn-success" @click="addToBasket">
+        <button type="button" class="btn btn-success" :data-cy-add="product.id" @click="addToBasket">
           Добавить в корзину
         </button>
       </div>

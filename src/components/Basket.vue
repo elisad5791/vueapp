@@ -42,9 +42,9 @@ const total = computed(function() {
           <td>{{ product.count }}</td>
           <td>{{ product.price * product.count }}</td>
           <td class="flex gap-1">
-            <button type="button" class="btn btn-sm btn-info text-xl" @click="increaseCount(product.id)">+</button>
-            <button type="button" class="btn btn-sm btn-info text-xl" @click="decreaseCount(product.id)">-</button>
-            <button type="button" class="btn btn-sm btn-error" @click="removeProductFromBasket(product.id)">
+            <button type="button" class="btn btn-sm btn-info text-xl" :data-cy-increase="product.id" @click="increaseCount(product.id)">+</button>
+            <button type="button" class="btn btn-sm btn-info text-xl" :data-cy-decrease="product.id" @click="decreaseCount(product.id)">-</button>
+            <button type="button" class="btn btn-sm btn-error" :data-cy-delete="product.id" @click="removeProductFromBasket(product.id)">
               Удалить
             </button>
           </td>

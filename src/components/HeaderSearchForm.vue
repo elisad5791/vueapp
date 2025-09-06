@@ -21,11 +21,11 @@ function resetProducts() {
 
 <template>
   <form @submit.prevent="findProducts" class="flex flex-wrap justify-center gap-2 w-full px-2">
-      <input type="text" class="input" v-model="title" placeholder="Название" />
-      <input type="number" step="any" class="input w-24" v-model="minPrice" placeholder="Цена, от" />
-      <input type="number" step="any" class="input w-24" v-model="maxPrice" placeholder="Цена, до" />
-      <button class="btn">Найти</button>
-      <button type="button" class="btn" @click="resetProducts">Сбросить</button>
+      <input type="text" class="input" v-model="title" data-cy-search-title placeholder="Название" />
+      <input type="number" step="any" class="input w-24" data-cy-min-price v-model="minPrice" placeholder="Цена, от" />
+      <input type="number" step="any" class="input w-24" data-cy-max-price v-model="maxPrice" placeholder="Цена, до" />
+      <button class="btn" data-cy-search-button >Найти</button>
+      <button type="button" class="btn" data-cy-search-reset @click="resetProducts">Сбросить</button>
   </form>
 </template>
 

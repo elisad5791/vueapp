@@ -31,16 +31,16 @@ function enter() {
   <form class="max-w-[400px] mx-auto mt-4" @submit.prevent="enter">
     <fieldset class="fieldset">
       <legend class="fieldset-legend">Имя</legend>
-      <input type="text" class="input" v-model.trim="name" />
+      <input type="text" class="input" data-cy-name v-model.trim="name" />
 
       <legend class="fieldset-legend">Email</legend>
-      <input type="email" class="input" v-model.trim="email" />
+      <input type="email" class="input" data-cy-email v-model.trim="email" />
 
       <legend class="fieldset-legend">Пароль</legend>
-      <input type="password" class="input" v-model.trim="password" />
+      <input type="password" class="input" data-cy-password v-model.trim="password" />
 
       <div class="mt-2">
-        <button class="btn btn-success">Войти</button>
+        <button class="btn btn-success" data-cy-submit>Войти</button>
       </div>
     </fieldset>
   </form>

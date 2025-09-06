@@ -12,12 +12,12 @@ export const useProductsStore = defineStore('products', function () {
     const api = axios.create({ baseURL: 'https://fakestoreapi.com' });
 
     let fetchedProducts;
-    try {
+    /*try {
         const response = await api.get('/products');
         fetchedProducts =  response.data;
-    } catch (error) {
+    } catch (error) {*/
     fetchedProducts = [];
-    }
+    /*}*/
 
     if (fetchedProducts.length == 0) {
       fetchedProducts = dataFromApi;

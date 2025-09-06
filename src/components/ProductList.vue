@@ -6,7 +6,7 @@ const props = defineProps(['products']);
 
 <template>
   <div>
-    <h1 class="text-4xl font-bold mt-4 text-center">Products</h1>
+    <h1 class="text-4xl font-bold mt-4 text-center">Товары</h1>
 
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 py-12 md:max-w-200 xl:max-w-300 mx-auto">
       <ProductItem v-for="product in products" :key="product.id" :product="product" />
