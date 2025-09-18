@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia';
 import { ref, watch, computed } from 'vue';
 
 const basketStore = useBasketStore()
-const { removeProductFromBasket, increaseCount, decreaseCount } = basketStore;
+const { removeProductFromBasket, increaseCount, decreaseCount, clearBasket } = basketStore;
 const { basket } = storeToRefs(basketStore);
 
 const items = ref(basket.value);
@@ -51,6 +51,11 @@ const total = computed(function() {
         </tr>
         <tr>
           <td colspan="6" class="font-bold">Полная сумма: {{ total }} руб.</td>
+        </tr>
+        <tr>
+          <td colspan="6">
+            <button class="btn" @click="clearBasket">Очистить корзину</button>
+          </td>
         </tr>
       </tbody>
     </table>

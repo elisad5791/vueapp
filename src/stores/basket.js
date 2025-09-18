@@ -73,6 +73,11 @@ export const useBasketStore = defineStore('basket', function () {
     updateLocalStorage();
   }
 
+  function clearBasket() {
+    basket.value = [];
+    updateLocalStorage();
+  }
+
   function updateLocalStorage() {
     const data = basket.value.reduce(function(acc, item) {
       acc[String(item.id)] = item.count;
@@ -86,5 +91,5 @@ export const useBasketStore = defineStore('basket', function () {
     }
   }
 
-  return { basket, loadBasket, addProductToBasket, removeProductFromBasket, increaseCount, decreaseCount };
+  return { basket, loadBasket, addProductToBasket, removeProductFromBasket, increaseCount, decreaseCount, clearBasket };
 });
