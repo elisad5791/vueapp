@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useMutation, useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
+import apolloClient from '../apollo/client';
 
 export const useProductsStore = defineStore('products', function () {
   const products = ref([]);
@@ -26,11 +26,8 @@ export const useProductsStore = defineStore('products', function () {
       }
     `;
 
-    const { result } = useQuery(allProductsQuery);
-
-    watch(result, value => {
-      products.value = value.products;
-    });
+    const { data } = await apolloClient.query({ query: allProductsQuery });
+    products.value = data.products;
   }
 
   function findProduct(productId) {
@@ -44,7 +41,7 @@ export const useProductsStore = defineStore('products', function () {
     return data;
   }
 
-  function addProduct(data) {
+  async function addProduct(data) {
     const product = {
       id: products.value.length,
       title: data.title,
@@ -57,7 +54,19 @@ export const useProductsStore = defineStore('products', function () {
         count: data.count,
       },
     };
-    products.value.push(product);
+    products.value = [...products.value, product];
+
+    const addProductQuery = gql`
+      mutation AddProduct($productInput: ProductInput!) {
+        addProduct(product: $productInput) {
+          id
+          title
+        }
+      }
+    `;
+    const params = { productInput: data };
+    await apolloClient.mutate({ mutation: addProductQuery, variables: params});
+
     router.push('/');
   }
 
