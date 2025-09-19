@@ -60,7 +60,6 @@ export const useProductsStore = defineStore('products', function () {
       mutation AddProduct($productInput: ProductInput!) {
         addProduct(product: $productInput) {
           id
-          title
         }
       }
     `;

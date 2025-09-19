@@ -5,6 +5,7 @@ import { useUserStore } from './stores/user.js';
 import { useProductsStore } from './stores/products.js';
 import { useBasketStore } from './stores/basket.js';
 import { storeToRefs } from 'pinia';
+import { io } from 'socket.io-client';
 
 onMounted(async function() {
   const userStore = useUserStore()
@@ -21,6 +22,12 @@ onMounted(async function() {
     const { loadBasket } = useBasketStore();
     loadBasket();
   }
+
+  const socket = io('ws://localhost:4000')
+  socket.on('update-products', (payload) => {
+    const newProducts = JSON.parse(payload);
+    products.value = newProducts;
+  });
 });
 </script>
 
