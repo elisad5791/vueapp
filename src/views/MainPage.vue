@@ -1,13 +1,20 @@
 <script setup>
 import HeaderSearchForm from '../components/HeaderSearchForm.vue';
 import ProductList from '../components/ProductList.vue';
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useProductsStore } from '../stores/products.js';
+import { useRouter } from 'vue-router';
 
-const filteredProducts = ref([]);
+const router = useRouter();
 const { products } = storeToRefs(useProductsStore());
+const filteredProducts = ref([]);
 filteredProducts.value = products.value;
+
+watch(products, (newValue) => {
+  filteredProducts.value = newValue;
+  router.push('/');
+});
 
 function searchProducts(data) {
   const title = data.title ?? '';

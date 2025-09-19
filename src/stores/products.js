@@ -1,29 +1,36 @@
 import { defineStore } from "pinia";
-import { ref } from 'vue';
-import axios from 'axios';
-import { dataFromApi } from '../data.js';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useMutation, useQuery } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
 
 export const useProductsStore = defineStore('products', function () {
   const products = ref([]);
   const router = useRouter();
 
   async function loadProducts() {
-    const api = axios.create({ baseURL: 'https://fakestoreapi.com' });
+    const allProductsQuery = gql`
+      query Products {
+        products {
+          id
+          title
+          price
+          description
+          category
+          image
+          rating {
+            rate
+            count
+          }
+        }
+      }
+    `;
 
-    let fetchedProducts;
-    /*try {
-        const response = await api.get('/products');
-        fetchedProducts =  response.data;
-    } catch (error) {*/
-    fetchedProducts = [];
-    /*}*/
+    const { result } = useQuery(allProductsQuery);
 
-    if (fetchedProducts.length == 0) {
-      fetchedProducts = dataFromApi;
-    }
-
-    products.value = fetchedProducts;
+    watch(result, value => {
+      products.value = value.products;
+    });
   }
 
   function findProduct(productId) {
