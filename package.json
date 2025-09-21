@@ -28,9 +28,12 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.0",
     "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.8.1",
     "cypress": "^15.1.0",
     "jsdom": "^26.1.0",
+    "typescript": "^5.9.2",
     "vite": "^7.0.4",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "vue-tsc": "^3.0.7"
   }
 }

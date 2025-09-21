@@ -31,8 +31,8 @@ export const useBasketStore = defineStore('basket', function () {
 
     if (ind == -1) {
       const product = findProduct(productId);
-      product['count'] = 1;
-      basket.value.push(product);
+      const newProduct = Object.assign({ count: 1 }, product);
+      basket.value = [...basket.value, newProduct];
     } else {
       basket.value[ind]['count'] += 1;
     }
