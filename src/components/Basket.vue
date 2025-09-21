@@ -1,23 +1,26 @@
-<script setup>
-import { useBasketStore } from '../stores/basket.js';
+<script setup lang="ts">
+import { useBasketStore } from '../stores/basket';
 import { storeToRefs } from 'pinia';
 import { ref, watch, computed } from 'vue';
+import { BasketItem } from '@/types';
 
 const basketStore = useBasketStore()
 const { removeProductFromBasket, increaseCount, decreaseCount, clearBasket } = basketStore;
 const { basket } = storeToRefs(basketStore);
 
-const items = ref(basket.value);
+const items = ref<BasketItem[]>(basket.value);
 
 watch(
-  () => basket.value, 
-  newValue => {
+  function(): BasketItem[] { return basket.value; }, 
+  function(newValue: BasketItem[]): void {
     items.value = newValue;
   }
 );
 
-const total = computed(function() {
-  return items.value.reduce((acc, item) => acc + item.price * item.count, 0).toFixed(2);
+const total = computed<string>(function(): string {
+  return items.value
+    .reduce((acc: number, item: BasketItem) => acc + item.price * item.count, 0)
+    .toFixed(2);
 });
 </script>
 

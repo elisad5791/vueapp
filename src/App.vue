@@ -1,13 +1,14 @@
-<script setup>
+<script setup lang="ts">
 import Navigation from './components/Navigation.vue';
 import { onMounted } from 'vue';
-import { useUserStore } from './stores/user.js';
-import { useProductsStore } from './stores/products.js';
-import { useBasketStore } from './stores/basket.js';
+import { useUserStore } from './stores/user';
+import { useProductsStore } from './stores/products';
+import { useBasketStore } from './stores/basket';
 import { storeToRefs } from 'pinia';
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
+import { Product } from '@/types';
 
-onMounted(async function() {
+onMounted(async function(): Promise<void> {
   const userStore = useUserStore()
   const { loadUser } = userStore;
   const { user } = storeToRefs(userStore);
@@ -23,9 +24,9 @@ onMounted(async function() {
     loadBasket();
   }
 
-  const socket = io('ws://localhost:4000')
-  socket.on('update-products', (payload) => {
-    const newProducts = JSON.parse(payload);
+  const socket: Socket = io('ws://localhost:4000')
+  socket.on('update-products', (payload: string) => {
+    const newProducts: Product[] = JSON.parse(payload);
     products.value = newProducts;
   });
 });

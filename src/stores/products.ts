@@ -1,14 +1,15 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import gql from 'graphql-tag';
 import apolloClient from '../apollo/client';
+import { Product, ProductFormData, ProductInput, ProductsQueryResponse, AddProductMutationResponse } from '@/types';
 
 export const useProductsStore = defineStore('products', function () {
-  const products = ref([]);
+  const products = ref<Product[]>([]);
   const router = useRouter();
 
-  async function loadProducts() {
+  async function loadProducts(): Promise<void> {
     const allProductsQuery = gql`
       query Products {
         products {
@@ -26,24 +27,24 @@ export const useProductsStore = defineStore('products', function () {
       }
     `;
 
-    const { data } = await apolloClient.query({ query: allProductsQuery });
+    const { data } = await apolloClient.query<ProductsQueryResponse>({ query: allProductsQuery });
     products.value = data.products;
   }
 
-  function findProduct(productId) {
-    const data = products.value.filter(item => item.id == productId);
-    const product = data.length > 0 ? data[0] : null;
+  function findProduct(productId: number): Product|null {
+    const data: Product[] = products.value.filter(item => item.id == productId);
+    const product: Product = data.length > 0 ? data[0] : null;
     return product;
   }
 
-  function findProductsByIds(ids) {
-    const data = products.value.filter((item) => ids.includes(item.id));
+  function findProductsByIds(ids: number[]): Product[] {
+    const data: Product[] = products.value.filter((item) => ids.includes(item.id));
     return data;
   }
 
-  async function addProduct(data) {
-    const product = {
-      id: products.value.length,
+  async function addProduct(data: ProductFormData): Promise<void> {
+    const product: Product = {
+      id: products.value.length + 1,
       title: data.title,
       price: data.price,
       description: data.description,
@@ -63,8 +64,8 @@ export const useProductsStore = defineStore('products', function () {
         }
       }
     `;
-    const params = { productInput: data };
-    await apolloClient.mutate({ mutation: addProductQuery, variables: params});
+    const params: ProductInput = { productInput: data };
+    await apolloClient.mutate<AddProductMutationResponse>({ mutation: addProductQuery, variables: params});
 
     router.push('/');
   }

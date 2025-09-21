@@ -1,7 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import ProductItem from './ProductItem.vue';
+import type { Product } from '@/types';
 
-const props = defineProps(['products']);
+interface Props {
+  products: Product[];
+}
+const props = defineProps<Props>();
 </script>
 
 <template>

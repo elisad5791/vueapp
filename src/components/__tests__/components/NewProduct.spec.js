@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import { expect, test } from 'vitest';
 import NewProduct from '../../NewProduct.vue';
 import { createPinia } from 'pinia';
-import router from '../../../router/index.js';
+import router from '../../../router/index.ts';
 
 test('displays creation form', () => {
   const pinia = createPinia();

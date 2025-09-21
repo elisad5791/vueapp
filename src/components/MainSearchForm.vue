@@ -1,13 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
+import { FilterData } from '@/types';
 
-const title = ref('');
-const minPrice = ref(null);
-const maxPrice = ref(null);
-const emits = defineEmits(['find']);
+const title = ref<string>('');
+const minPrice = ref<number|null>(null);
+const maxPrice = ref<number|null>(null);
 
-function findProducts() {
-  const data = { title: title.value, min_price: minPrice.value, max_price: maxPrice.value };
+const emits = defineEmits<{
+  (e: 'find', data: FilterData): void;
+}>();
+
+function findProducts(): void {
+  const data: FilterData = { title: title.value, min_price: minPrice.value, max_price: maxPrice.value };
   emits('find', data);
 }
 </script>

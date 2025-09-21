@@ -1,17 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '../stores/user.js';
+import { useUserStore } from '../stores/user';
 
 const router = useRouter();
 const { login } = useUserStore();
 
-const name = ref('');
-const email = ref('');
-const password = ref('');
-const showError = ref(false);
+const name = ref<string>('');
+const email = ref<string>('');
+const password = ref<string>('');
+const showError = ref<boolean>(false);
 
-function enter() {
+function enter(): void {
   if (name.value.length > 0 && email.value.length > 0 && password.value.length > 0) {
     login(name.value, email.value, password.value);
   } else {

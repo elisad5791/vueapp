@@ -1,17 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from 'vue';
-import { useUserStore } from '../stores/user.js';
+import { useUserStore } from '../stores/user';
 import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
 const { logout } = userStore;
 const { user } = storeToRefs(userStore);
 
-const showLogin = ref(!user.value.isLoggedIn);
+const showLogin = ref<boolean>(!user.value.isLoggedIn);
 
 watch(
   () => user.value.isLoggedIn, 
-  function(newValue) {
+  function(newValue: boolean): void {
     showLogin.value = !newValue;
   }
 );

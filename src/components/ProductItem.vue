@@ -1,14 +1,19 @@
-<script setup>
-import { useUserStore } from '../stores/user.js';
+<script setup lang="ts">
+import { useUserStore } from '../stores/user';
 import { useRouter } from 'vue-router';
-import { useBasketStore } from '../stores/basket.js';
+import { useBasketStore } from '../stores/basket';
+import { Product } from '@/types';
 
-const props = defineProps(['product']);
+interface Props {
+  product: Product;
+}
+const props = defineProps<Props>();
+
 const router = useRouter();
 const { addProductToBasket } = useBasketStore();
 const { checkout } = useUserStore();
 
-function addToBasket() {
+function addToBasket(): void {
   if (!checkout()) return;
   addProductToBasket(props.product.id);
 }

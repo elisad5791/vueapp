@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { User, UserData } from '@/types';
 
 export const useUserStore = defineStore('user', function () {
-    const user = ref({
+    const user = ref<User>({
         name: '',
         email: '',
         password: '',
@@ -11,30 +12,30 @@ export const useUserStore = defineStore('user', function () {
     });
     const router = useRouter();
 
-    function loadUser() {
+    function loadUser(): void {
         const isAuth = window.localStorage.getItem('isLoggedIn');
         if (isAuth) {
-            const data = window.localStorage.getItem('user');
-            const userData = JSON.parse(data);
+            const data: string|null = window.localStorage.getItem('user');
+            const userData: UserData = JSON.parse(data);
             user.value.name = userData.name;
             user.value.email = userData.email;
             user.value.isLoggedIn = true;
         }
     }
 
-    function login(name, email, password) {
+    function login(name: string, email: string, password: string): void {
         user.value.name = name;
         user.value.email = email;
         user.value.password = password;
         user.value.isLoggedIn = true;
 
-        const data = { name, email };
+        const data: UserData = { name, email };
         window.localStorage.setItem('user', JSON.stringify(data));
-        window.localStorage.setItem('isLoggedIn', true);
+        window.localStorage.setItem('isLoggedIn', 'true');
         router.push('/admin');
     }
 
-    function logout() {
+    function logout(): void {
         user.value.name = '';
         user.value.email = '';
         user.value.password = '';
@@ -45,7 +46,7 @@ export const useUserStore = defineStore('user', function () {
         router.push('/');
     }
 
-    function checkout() {
+    function checkout(): boolean {
         if (!user.value.isLoggedIn) {
             router.push('/login');
             return false;

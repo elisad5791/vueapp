@@ -1,18 +1,21 @@
-<script setup>
-import { ref, computed } from "vue";
-import axios from "axios";
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import axios from 'axios';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
+import { Product, Order } from '@/types';
 
-const props = defineProps(['product_data']);
+const props = defineProps<{
+  product_data: Product
+}>();
 
-const orderCreated = ref(false);
-const orderError = ref(false);
+const orderCreated = ref<boolean>(false);
+const orderError = ref<boolean>(false);
 
-const agreement = ref(true);
-const delivery = ref('1');
+const agreement = ref<boolean>(true);
+const delivery = ref<'1'|'2'>('1');
 
-const showAddress = computed(function() {
+const showAddress = computed<boolean>(function() {
   return delivery.value == '2';
 });
 
@@ -59,7 +62,7 @@ const schema = yup.object().shape({
 
 const api = axios.create({ baseURL: 'https://httpbin.org' });
 
-async function saveOrder(values) {
+async function saveOrder(values: Order): Promise<void> {
   console.log(values);
   try {
     await api.post('/post', values);

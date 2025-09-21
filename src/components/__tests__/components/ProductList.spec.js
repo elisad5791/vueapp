@@ -3,7 +3,7 @@ import { expect, test } from 'vitest';
 import ProductList from '../../ProductList.vue';
 import ProductItem from '../../ProductItem.vue';
 import { createPinia } from 'pinia';
-import router from '../../../router/index.js';
+import router from '../../../router/index.ts';
 
 test('displays productItem components', () => {
   const testProducts = [{

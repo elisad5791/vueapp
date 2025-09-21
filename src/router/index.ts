@@ -1,6 +1,5 @@
-import { createWebHistory, createRouter } from 'vue-router';
-import { inject } from 'vue';
-import { useUserStore } from '../stores/user.js';
+import { createWebHistory, createRouter, RouteRecordRaw } from 'vue-router';
+import { useUserStore } from '../stores/user';
 import MainPage from '../views/MainPage.vue';
 import ProductPage from '../views/ProductPage.vue';
 import AdminPage from '../views/AdminPage.vue';
@@ -8,7 +7,7 @@ import BasketPage from '../views/BasketPage.vue';
 import LoginPage from '../views/LoginPage.vue';
 
 
-const routes = [
+const routes: Array<RouteRecordRaw> = [
   { path: '/', component: MainPage },
   { path: '/product/:id', component: ProductPage },
   { 
@@ -30,8 +29,7 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from) => {
-  const pinia = inject('pinia')
-  const userStore = useUserStore(pinia)
+  const userStore = useUserStore()
     
   if (to.meta.requiresAuth && !userStore.checkout()) {
     { path: '/login' };

@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import { expect, test } from 'vitest';
 import Login from '../../Login.vue';
 import { createPinia } from 'pinia';
-import router from '../../../router/index.js';
+import router from '../../../router/index.ts';
 
 test('displays labels', () => {
   const pinia = createPinia();

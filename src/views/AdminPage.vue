@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import NewProduct from '../components/NewProduct.vue';
 </script>
 

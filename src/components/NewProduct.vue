@@ -1,19 +1,20 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
-import { useProductsStore } from '../stores/products.js';
+import { useProductsStore } from '../stores/products';
+import { ProductFormData } from '@/types';
 
-const title = ref('');
-const description = ref('');
-const category = ref('');
-const image = ref('');
-const price = ref(null);
-const rate = ref(null);
-const count = ref(null);
+const title = ref<string>('');
+const description = ref<string>('');
+const category = ref<string>('');
+const image = ref<string>('');
+const price = ref<number|null>(null);
+const rate = ref<number|null>(null);
+const count = ref<number|null>(null);
 
 const { addProduct } = useProductsStore();
 
-function saveProduct() {
-  const data = {  
+function saveProduct(): void {
+  const data: ProductFormData = {  
     title: title.value,
     description: description.value,
     price: price.value,

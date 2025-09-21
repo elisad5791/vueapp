@@ -1,12 +1,17 @@
-<script setup>
-import { useUserStore } from '../stores/user.js';
-import { useBasketStore } from '../stores/basket.js';
+<script setup lang="ts">
+import { useUserStore } from '../stores/user';
+import { useBasketStore } from '../stores/basket';
+import { Product } from '@/types';
 
-const props = defineProps(['product']);
+interface Props {
+  product: Product;
+}
+const props = defineProps<Props>();
+
 const { addProductToBasket } = useBasketStore();
 const { checkout } = useUserStore();
 
-function addToBasket() {
+function addToBasket(): void {
   if (!checkout()) return;
   addProductToBasket(props.product.id);
 }

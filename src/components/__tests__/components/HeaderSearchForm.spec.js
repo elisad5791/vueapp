@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import { expect, test } from 'vitest';
 import HeaderSearchForm from '../../HeaderSearchForm.vue';
 import { createPinia } from 'pinia';
-import router from '../../../router/index.js';
+import router from '../../../router/index.ts';
 
 test('displays inputs, buttons', () => {
   const pinia = createPinia();
