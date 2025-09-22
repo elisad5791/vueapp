@@ -11,7 +11,7 @@ const showLogin = ref<boolean>(!user.value.isLoggedIn);
 
 watch(
   () => user.value.isLoggedIn, 
-  function(newValue: boolean): void {
+  (newValue) => {
     showLogin.value = !newValue;
   }
 );

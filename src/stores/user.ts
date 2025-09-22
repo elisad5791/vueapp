@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { User, UserData } from '@/types';
 
-export const useUserStore = defineStore('user', function () {
+export const useUserStore = defineStore('user', () => {
     const user = ref<User>({
         name: '',
         email: '',

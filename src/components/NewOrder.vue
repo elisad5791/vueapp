@@ -15,9 +15,7 @@ const orderError = ref<boolean>(false);
 const agreement = ref<boolean>(true);
 const delivery = ref<'1'|'2'>('1');
 
-const showAddress = computed<boolean>(function() {
-  return delivery.value == '2';
-});
+const showAddress = computed<boolean>(() => delivery.value == '2');
 
 const schema = yup.object().shape({
   choice: yup.number().required().positive().integer(),

@@ -4,7 +4,7 @@ import { useProductsStore } from './products';
 import { useRouter } from 'vue-router';
 import { BasketItem, Product, BasketStorage } from '@/types';
 
-export const useBasketStore = defineStore('basket', function () {
+export const useBasketStore = defineStore('basket', () => {
   const basket = ref<BasketItem[]>([]);
   const { findProduct, findProductsByIds } = useProductsStore();
   const router = useRouter();
@@ -17,17 +17,12 @@ export const useBasketStore = defineStore('basket', function () {
       const data = JSON.parse(storage);
       const ids: number[] = Object.keys(data).map(item => parseInt(item));
       const basketProducts: Product[] = findProductsByIds(ids);
-      basket.value = basketProducts.map(function(item: Product): BasketItem {
-        const newItem: BasketItem = { ...item, count: data[String(item.id)] };
-        return newItem;
-      });
+      basket.value = basketProducts.map((item: Product): BasketItem => ({ ...item, count: data[String(item.id)] }));
     }
   }
 
   function addProductToBasket(productId: number): void {
-    const ind: number = basket.value.findIndex(function(val: Product): boolean {
-      return val.id == productId;
-    });
+    const ind: number = basket.value.findIndex((val: Product): boolean => val.id == productId);
 
     if (ind == -1) {
       const product: Product = findProduct(productId);
@@ -43,14 +38,12 @@ export const useBasketStore = defineStore('basket', function () {
   }
 
   function removeProductFromBasket(productId: number): void {
-    basket.value = basket.value.filter(function(item: BasketItem): boolean {return item.id != productId; });
+    basket.value = basket.value.filter((item: BasketItem): boolean => item.id != productId);
     updateLocalStorage();
   }
 
   function increaseCount(productId: number): void {
-    const ind: number = basket.value.findIndex(function(val: BasketItem): boolean {
-      return val.id == productId;
-    });
+    const ind: number = basket.value.findIndex((val: BasketItem): boolean => val.id == productId);
 
     const count: number = basket.value[ind]['count'] + 1;
     basket.value[ind]['count'] = count;
@@ -59,9 +52,7 @@ export const useBasketStore = defineStore('basket', function () {
   }
 
   function decreaseCount(productId: number): void {
-    const ind: number = basket.value.findIndex(function(val: BasketItem): boolean {
-      return val.id == productId;
-    });
+    const ind: number = basket.value.findIndex((val: BasketItem): boolean => val.id == productId);
 
     const initialCount: number = basket.value[ind]['count'];
     if (initialCount > 1) {
@@ -79,7 +70,7 @@ export const useBasketStore = defineStore('basket', function () {
   }
 
   function updateLocalStorage(): void {
-    const data: BasketStorage  = basket.value.reduce(function(acc: BasketStorage, item: BasketItem): BasketStorage {
+    const data: BasketStorage  = basket.value.reduce((acc: BasketStorage, item: BasketItem): BasketStorage => {
       acc[String(item.id)] = item.count;
       return acc;
     }, {});

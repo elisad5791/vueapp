@@ -11,17 +11,16 @@ const { basket } = storeToRefs(basketStore);
 const items = ref<BasketItem[]>(basket.value);
 
 watch(
-  function(): BasketItem[] { return basket.value; }, 
-  function(newValue: BasketItem[]): void {
+  () => basket.value, 
+  (newValue) => {
     items.value = newValue;
   }
 );
 
-const total = computed<string>(function(): string {
-  return items.value
+const total = computed<string>(() => items.value
     .reduce((acc: number, item: BasketItem) => acc + item.price * item.count, 0)
-    .toFixed(2);
-});
+    .toFixed(2)
+);
 </script>
 
 <template>

@@ -12,7 +12,7 @@ const { products } = storeToRefs(useProductsStore());
 const filteredProducts = ref<Product[]>([]);
 filteredProducts.value = products.value;
 
-watch(products, function(newValue: Product[]): void {
+watch(products, (newValue) => {
   filteredProducts.value = newValue;
   router.push('/');
 });
@@ -24,19 +24,13 @@ function searchProducts(data: FilterData): void {
   let newProducts = products.value;
 
   if (title) {
-    newProducts = newProducts.filter(function (item: Product): boolean {
-      return item.title.toLowerCase().includes(title.toLowerCase());
-    });
+    newProducts = newProducts.filter((item: Product): boolean => item.title.toLowerCase().includes(title.toLowerCase()));
   }
   if (minPrice) {
-    newProducts = newProducts.filter(function (item: Product): boolean {
-      return item.price >= minPrice;
-    });
+    newProducts = newProducts.filter((item: Product): boolean => item.price >= minPrice);
   }
   if (maxPrice) {
-    newProducts = newProducts.filter(function (item: Product): boolean {
-      return item.price <= maxPrice;
-    });
+    newProducts = newProducts.filter((item: Product): boolean => item.price <= maxPrice);
   }
   filteredProducts.value = newProducts;
 }

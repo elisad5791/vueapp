@@ -8,7 +8,7 @@ import { storeToRefs } from 'pinia';
 import { io, Socket } from 'socket.io-client';
 import { Product } from '@/types';
 
-onMounted(async function(): Promise<void> {
+onMounted(async (): Promise<void> => {
   const userStore = useUserStore()
   const { loadUser } = userStore;
   const { user } = storeToRefs(userStore);

@@ -12,7 +12,7 @@ const emits = defineEmits<{
 }>();
 
 function findProducts(): void {
-  const data: FilterData = { title: title.value, min_price: minPrice.value, max_price: maxPrice.value };
+  const data = { title: title.value, min_price: minPrice.value, max_price: maxPrice.value };
   emits('find', data);
 }
 

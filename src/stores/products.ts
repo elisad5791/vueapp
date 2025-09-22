@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import apolloClient from '../apollo/client';
 import { Product, ProductFormData, ProductInput, ProductsQueryResponse, AddProductMutationResponse } from '@/types';
 
-export const useProductsStore = defineStore('products', function () {
+export const useProductsStore = defineStore('products', () => {
   const products = ref<Product[]>([]);
   const router = useRouter();
 
@@ -32,13 +32,13 @@ export const useProductsStore = defineStore('products', function () {
   }
 
   function findProduct(productId: number): Product|null {
-    const data: Product[] = products.value.filter(item => item.id == productId);
+    const data: Product[] = products.value.filter((item: Product): boolean => item.id == productId);
     const product: Product = data.length > 0 ? data[0] : null;
     return product;
   }
 
   function findProductsByIds(ids: number[]): Product[] {
-    const data: Product[] = products.value.filter((item) => ids.includes(item.id));
+    const data: Product[] = products.value.filter((item: Product): boolean => ids.includes(item.id));
     return data;
   }
 
